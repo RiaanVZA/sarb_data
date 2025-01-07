@@ -1,6 +1,10 @@
 import requests 
 import pandas as pd
 from tabulate import tabulate
+from pathlib import Path
+from . import utils
+
+
 
 def display_data(df):
     """ Display the contets of a dataframe.
@@ -17,6 +21,8 @@ def display_data(df):
 
     except Exception as err:
         raise err 
+
+
 
 def fetch_data(api_url: str) -> str:
     """ fetch data from SARB API
@@ -52,20 +58,27 @@ def convert_data_to_dataframe(data) -> pd.DataFrame:
         print("Something went wrong!")   
 
 
-def fetch_home_page_rates():
+def fetch_home_page_rates(save_to_csv:bool, email: bool = False):
     # fetch home page rates
     print("Fetching latest Home Page Rates from SARB.")
+    print(save_to_csv)
     data = fetch_data("https://custom.resbank.co.za/SarbWebApi/WebIndicators/HomePageRates")
     display_data(convert_data_to_dataframe(data))
-
-def fetch_market_rates():
+    if save_to_csv == True:
+        utils.save_as_csv(convert_data_to_dataframe(data), "home_page_rates", email)
+    
+def fetch_market_rates(save_to_csv:bool):
     # fetch home page rates
     print("Fetching latest Current Market Rates from SARB.")
     data = fetch_data("https://custom.resbank.co.za/SarbWebApi/WebIndicators/CurrentMarketRates")
     display_data(convert_data_to_dataframe(data))
+    if save_to_csv == True:
+        utils.save_as_csv(convert_data_to_dataframe(data), "current_market_rates")
 
-def fetch_historical_exchange_rates():
+def fetch_historical_exchange_rates(save_to_csv:bool):
     # fetch home page rates
     print("Fetching latest Historical Exchange Rates (Daily) from SARB.")
     data = fetch_data("https://custom.resbank.co.za/SarbWebApi/WebIndicators/HistoricalExchangeRatesDaily")
     display_data(convert_data_to_dataframe(data))
+    if save_to_csv == True:
+        utils.save_as_csv(convert_data_to_dataframe(data), "historical_exchange_rates_daily")
