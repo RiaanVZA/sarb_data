@@ -15,11 +15,11 @@ def get_api_data():
 def map_updown(change: int):
 
     if change == 1:
-        return '<span style="color:green;">▲</span>'  # Up arrow
+        return '<span style="color:green;"> ▲ </span>'  # Up arrow
     elif change == 0: 
-        return '<span style="color:gray;">=</span>'  # No change
+        return '<span style="color:gray;"> = </span>'  # No change
     elif change == -1: 
-        return '<span style="color:red;">▼</span>'  # Down arrow
+        return '<span style="color:red;"> ▼ </span>'  # Down arrow
     else:
         return ''
 
@@ -56,6 +56,8 @@ def main():
         exchange_rates_df = df[df["SectionName"] == "Exchange rates"][["Name", "Value", "Date", "UpDown"]]
         money_market_rates_df = df[df["SectionName"] == "Money Market Rates"][["Name", "Value", "Date", "UpDown"]]
 
+        st.caption("Trends", help="Movement: ▲ for up, ▼ for down, = for no change")
+
         # first container, with Interest, Inflation and Capital Market Rates
         with st.container():
             col1, col2, col3 = st.columns([1,1,3])
@@ -64,7 +66,7 @@ def main():
                 for index, row in interest_rates_df.iterrows():
                     name :str = row["Name"]
                     st.markdown(f"""
-                        <li font-size:18px;">{name} :  <strong>{row['Value']}%</strong> [ {map_updown(row['UpDown'])} ]</li>
+                        <li font-size:18px;">{name}: <strong>{row['Value']}%</strong>{map_updown(row['UpDown'])}</li>
                     """, unsafe_allow_html=True)
                     
             with col2:
@@ -72,15 +74,15 @@ def main():
                 for index, row in inflation_rates_df.iterrows():
                     name :str = row["Name"]
                     st.markdown(f"""
-                        <li font-size:18px;">{name} :  <strong>{row['Value']}%</strong> [ {map_updown(row['UpDown'])} ]</li>
+                        <li font-size:18px;">{name}: <strong>{row['Value']}%</strong>{map_updown(row['UpDown'])}</li>
                     """, unsafe_allow_html=True)
 
             with col3:
-                st.subheader("Capital Market Rates", divider="red")
+                st.subheader("Capital Market Rates", divider="violet")
                 for index, row in capital_market_rates_df.iterrows():
                     name :str = row["Name"]
                     st.markdown(f"""
-                        <li font-size:18px;">{name.upper()} :  <strong>{row['Value']}%</strong> [ {map_updown(row['UpDown'])} ]</li>
+                        <li font-size:18px;">{name}: <strong>{row['Value']}%</strong>{map_updown(row['UpDown'])}</li>
                     """, unsafe_allow_html=True)
 
         # second container with Money Market and Exchange Rates
@@ -88,25 +90,27 @@ def main():
             col1, col2, = st.columns([2,3])
             
             with col1:
-                st.subheader("Money Market Rates", divider="violet")
+                st.subheader("Money Market Rates", divider="red")
                 for index, row in money_market_rates_df.iterrows():
                     name :str = row["Name"]
                     st.markdown(f"""
-                        <li font-size:18px;">{name} :  <strong>{row['Value']}%</strong> [ {map_updown(row['UpDown'])} ]</li>
+                        <li font-size:18px;">{name}: <strong>{row['Value']}%</strong>{map_updown(row['UpDown'])}</li>
                     """, unsafe_allow_html=True)
                 
             with col2:
-                st.subheader("Exchange Rates", divider="grey")
+                st.subheader("Exchange Rates", divider="orange")
                 # st.table(money_market_rates_df) #,hide_index=False)
                 for index, row in exchange_rates_df.iterrows():
                     name :str = row["Name"]
                     st.markdown(f"""
-                        <li font-size:18px;">{name} :  <strong>R {row['Value']}</strong> [ {map_updown(row['UpDown'])} ]</li>
+                        <li font-size:18px;">{name}: <strong>R {row['Value']}</strong>{map_updown(row['UpDown'])}</li>
                     """, unsafe_allow_html=True)
+
+        
 
         # last container with raw data in table/dataframe
         with st.container():
-
+              
             st.subheader("", divider="grey")
             st.subheader("Data")
 
