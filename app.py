@@ -56,7 +56,7 @@ def main():
         exchange_rates_df = df[df["SectionName"] == "Exchange rates"][["Name", "Value", "Date", "UpDown"]]
         money_market_rates_df = df[df["SectionName"] == "Money Market Rates"][["Name", "Value", "Date", "UpDown"]]
 
-        st.header("SARB Market and Exhange Rates")
+        st.header("SARB Market & Exhange Rates")
         st.caption("Trends", help="Movement: ▲ for up, ▼ for down, = for no change")
 
         # first container, with Interest, Inflation and Capital Market Rates
