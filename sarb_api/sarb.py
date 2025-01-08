@@ -76,7 +76,7 @@ def fetch_all_rates() -> str:
 
             # 3. Append the API data to the existing rates dataframe. 
             rates_df = pd.concat([rates_df, api_data_df], ignore_index=True)
-            
+
         return rates_df
 
     except Exception as err:

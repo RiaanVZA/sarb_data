@@ -8,9 +8,20 @@ def get_api_data():
 
     rates_data = sarb.fetch_all_rates()
     df_rates = sarb.convert_data_to_dataframe(rates_data)
-    df_view = df_rates[["SectionName", "SectionId", "Name", "Value", "Date"]]
+    df_view = df_rates[["SectionName", "SectionId", "Name", "Value", "UpDown", "Date"]]
     
     return df_view
+
+def map_updown(change: int):
+
+    if change == 1:
+        return '<span style="color:green;">▲</span>'  # Up arrow
+    elif change == 0: 
+        return '<span style="color:gray;">=</span>'  # No change
+    elif change == -1: 
+        return '<span style="color:red;">▼</span>'  # Down arrow
+    else:
+        return ''
 
 def main():
   
@@ -39,11 +50,11 @@ def main():
         )
 
         # define various rate dataframes 
-        capital_market_rates_df = df[df["SectionName"] == "Capital Market Rates"][["Name", "Value", "Date"]]
-        inflation_rates_df = df[df["SectionName"] == "Inflation rates"][["Name", "Value", "Date"]]
-        interest_rates_df = df[df["SectionName"] == "Interest rates"][["Name", "Value", "Date"]]
-        exchange_rates_df = df[df["SectionName"] == "Exchange rates"][["Name", "Value", "Date"]]
-        money_market_rates_df = df[df["SectionName"] == "Money Market Rates"][["Name", "Value", "Date"]]
+        capital_market_rates_df = df[df["SectionName"] == "Capital Market Rates"][["Name", "Value", "Date", "UpDown"]]
+        inflation_rates_df = df[df["SectionName"] == "Inflation rates"][["Name", "Value", "Date", "UpDown"]]
+        interest_rates_df = df[df["SectionName"] == "Interest rates"][["Name", "Value", "Date", "UpDown"]]
+        exchange_rates_df = df[df["SectionName"] == "Exchange rates"][["Name", "Value", "Date", "UpDown"]]
+        money_market_rates_df = df[df["SectionName"] == "Money Market Rates"][["Name", "Value", "Date", "UpDown"]]
 
         # first container, with Interest, Inflation and Capital Market Rates
         with st.container():
@@ -53,7 +64,7 @@ def main():
                 for index, row in interest_rates_df.iterrows():
                     name :str = row["Name"]
                     st.markdown(f"""
-                        <li font-size:18px;">{name} :  <strong>{row['Value']}%</strong></li>
+                        <li font-size:18px;">{name} :  <strong>{row['Value']}%</strong> [ {map_updown(row['UpDown'])} ]</li>
                     """, unsafe_allow_html=True)
                     
             with col2:
@@ -61,7 +72,7 @@ def main():
                 for index, row in inflation_rates_df.iterrows():
                     name :str = row["Name"]
                     st.markdown(f"""
-                        <li font-size:18px;">{name} :  <strong>{row['Value']}%</strong></li>
+                        <li font-size:18px;">{name} :  <strong>{row['Value']}%</strong> [ {map_updown(row['UpDown'])} ]</li>
                     """, unsafe_allow_html=True)
 
             with col3:
@@ -69,7 +80,7 @@ def main():
                 for index, row in capital_market_rates_df.iterrows():
                     name :str = row["Name"]
                     st.markdown(f"""
-                        <li font-size:18px;">{name.upper()} :  <strong>{row['Value']}%</strong></li>
+                        <li font-size:18px;">{name.upper()} :  <strong>{row['Value']}%</strong> [ {map_updown(row['UpDown'])} ]</li>
                     """, unsafe_allow_html=True)
 
         # second container with Money Market and Exchange Rates
@@ -81,7 +92,7 @@ def main():
                 for index, row in money_market_rates_df.iterrows():
                     name :str = row["Name"]
                     st.markdown(f"""
-                        <li font-size:18px;">{name} :  <strong>{row['Value']}%</strong></li>
+                        <li font-size:18px;">{name} :  <strong>{row['Value']}%</strong> [ {map_updown(row['UpDown'])} ]</li>
                     """, unsafe_allow_html=True)
                 
             with col2:
@@ -90,14 +101,52 @@ def main():
                 for index, row in exchange_rates_df.iterrows():
                     name :str = row["Name"]
                     st.markdown(f"""
-                        <li font-size:18px;">{name} :  <strong>R {row['Value']}</strong></li>
+                        <li font-size:18px;">{name} :  <strong>R {row['Value']}</strong> [ {map_updown(row['UpDown'])} ]</li>
                     """, unsafe_allow_html=True)
 
-        # last container with raw data in grids
+        # last container with raw data in table/dataframe
         with st.container():
+
             st.subheader("", divider="grey")
             st.subheader("Data")
-            st.dataframe(df, use_container_width=True, hide_index=True)
+
+            arrow_mapping = {
+                1: "▲",  # Up arrow
+                0: "=",  # No change
+                -1: "▼"  # Down arrow
+            }
+           
+            column_config = {
+                "SectionName": st.column_config.TextColumn(
+                    "Category",  # Custom header label
+                    help="The name of the category.",  # Tooltip
+                ),
+                "SectionId": st.column_config.TextColumn(
+                    "Code",  # Custom header label
+                    help="The rate's code.",  # Tooltip
+                ),
+                "Name": st.column_config.TextColumn(
+                    "Name", # Custom header label
+                    help="The name of the rate.", # Toolti
+                ),
+                "Value": st.column_config.NumberColumn(
+                    "Value",
+                    # format="%.3f",  # Display numbers with two decimal places
+                    help="The value of the rate.",
+                ),
+                "Date": st.column_config.DateColumn(
+                    "Date",
+                    format="DD-MM-YYYY",  # Custom date format
+                    help="The date associated with the rate. dd-mm-yyyy",
+                ),
+                "UpDown": st.column_config.TextColumn(
+                    "Trend",
+                    help="The trend of the rate (▲ for up, ▼ for down, = for no change).",
+                ),
+            }
+
+            df["UpDown"] = df["UpDown"].map(arrow_mapping)
+            st.dataframe(df, use_container_width=True, hide_index=True, column_config=column_config)
 
     except Exception as err:
         raise err 
