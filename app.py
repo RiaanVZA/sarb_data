@@ -35,7 +35,8 @@ def main():
         )
     # st.sidebar.image("./images/logo.jpg", width=100)
     st.sidebar.header("SARB Market and Exhange Rates")
-    
+    st.sidebar.caption("https://custom.resbank.co.za/SarbWebApi/Help")
+
     #popluate data
     df = get_data()
 
@@ -86,6 +87,7 @@ def main():
                 st.markdown(f"""
                     <li font-size:18px;">{name} :  <strong>{row['Value']}%</strong></li>
                 """, unsafe_allow_html=True)
+            
 
         with col2:
             st.subheader("Exchange Rates", divider="grey")
@@ -96,11 +98,10 @@ def main():
                     <li font-size:18px;">{name} :  <strong>R {row['Value']}</strong></li>
                 """, unsafe_allow_html=True)
 
-    st.write("---")
-
     with st.container():
-        st.subheader("Data Grid")
-        st.dataframe(df, use_container_width=True)
+        st.subheader("", divider="grey")
+        st.subheader("Data")
+        st.dataframe(df, use_container_width=True, hide_index=True)
 
     if st.sidebar.button("Refresh Data"):
         st.rerun()  # This reloads the page
@@ -111,7 +112,8 @@ def main():
         file_name="sars_data.csv",
         mime="text/csv"
     )
-        
+
+    
    
 if __name__ == "__main__":
      main()
