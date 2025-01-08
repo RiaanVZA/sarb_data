@@ -1,8 +1,5 @@
 import requests 
 import pandas as pd
-import streamlit as st
-
-from pathlib import Path
 from . import utils
 
 def fetch_data(api_url: str) -> str:

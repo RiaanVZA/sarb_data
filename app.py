@@ -35,7 +35,7 @@ def main():
         )
     # st.sidebar.image("./images/logo.jpg", width=100)
     st.sidebar.header("SARB Market and Exhange Rates")
-  
+    
     #popluate data
     df = get_data()
 
