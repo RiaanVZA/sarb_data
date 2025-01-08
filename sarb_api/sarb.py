@@ -1,31 +1,43 @@
 import requests 
 import pandas as pd
-from tabulate import tabulate
+import streamlit as st
+from typing import  Any, List, Dict, Union 
 from pathlib import Path
 from . import utils
 
 
 
-def display_data(df):
-    """ Display the contets of a dataframe.
-    """
+# def display_data(df):
+#     """ Display the contets of a dataframe.
+#     """
        
-    try:
+#     try:
 
-        # create a sub section (view)
-        df_view = df[["SectionName", "Name", "Value", "Date"]]
+#         # create a sub section (view)
+#         df_sorted = df.sort_values(by=["Date", "SectionName", "SectionId", "Name"], ascending=[True, True, True, True])
+#         df_distinct = df_sorted.drop_duplicates(subset=["Name"])
+#         df_view = df_distinct[["SectionName", "SectionId", "Name", "Value", "Date"]]
+        
 
-        #print the contents of the dataframe in a table
-        colalign = ["left", "left", "left", "right", "center"]
-        print(tabulate(df_view, headers='keys', tablefmt='presto', colalign=colalign))
+#         #print the contents of the dataframe in a table
+#         colalign = ["left", "left", "left", "left", "right", "center"]
+#         print(tabulate(df_view, headers='keys', tablefmt='presto', colalign=colalign))
 
-    except Exception as err:
-        raise err 
+
+#     except Exception as err:
+#         raise err 
 
 
 
 def fetch_data(api_url: str) -> str:
-    """ fetch data from SARB API
+    """ 
+    Fetch data from any given SARB API.
+
+    Parameters: 
+    - api_url = API URL 
+
+    Returns:
+       str : JSON response form API.
     """
 
     try:
@@ -33,8 +45,8 @@ def fetch_data(api_url: str) -> str:
         response = requests.get(api_url)
 
         if response.status_code == 200:
-            data = response.json()  
-            return data           
+            parsed_json = response.json() 
+            return parsed_json           
         else:
             print("{'Status_Code': '%s!'}" % response.status_code)
 
@@ -51,34 +63,50 @@ def convert_data_to_dataframe(data) -> pd.DataFrame:
         df["Value"] = pd.to_numeric(df["Value"])
         df["Date"] = pd.to_datetime(df["Date"])
 
-        return df
+        df_sorted = df.sort_values(by=["SectionName", "SectionId", "Name", "Date"], ascending=[True, True, True, True])
+        df_distinct = df_sorted.drop_duplicates(subset=["Name"])
+
+        return df_distinct
 
 
     except Exception as err:
         print("Something went wrong!")   
 
 
-def fetch_home_page_rates(save_to_csv:bool, email: bool = False):
-    # fetch home page rates
-    print("Fetching latest Home Page Rates from SARB.")
-    print(save_to_csv)
-    data = fetch_data("https://custom.resbank.co.za/SarbWebApi/WebIndicators/HomePageRates")
-    display_data(convert_data_to_dataframe(data))
-    if save_to_csv == True:
-        utils.save_as_csv(convert_data_to_dataframe(data), "home_page_rates", email)
-    
-def fetch_market_rates(save_to_csv:bool):
-    # fetch home page rates
-    print("Fetching latest Current Market Rates from SARB.")
-    data = fetch_data("https://custom.resbank.co.za/SarbWebApi/WebIndicators/CurrentMarketRates")
-    display_data(convert_data_to_dataframe(data))
-    if save_to_csv == True:
-        utils.save_as_csv(convert_data_to_dataframe(data), "current_market_rates")
+def fetch_all_rates() -> str:
+    """
+    Fetch all the rates from SARB API
 
-def fetch_historical_exchange_rates(save_to_csv:bool):
-    # fetch home page rates
-    print("Fetching latest Historical Exchange Rates (Daily) from SARB.")
-    data = fetch_data("https://custom.resbank.co.za/SarbWebApi/WebIndicators/HistoricalExchangeRatesDaily")
-    display_data(convert_data_to_dataframe(data))
-    if save_to_csv == True:
-        utils.save_as_csv(convert_data_to_dataframe(data), "historical_exchange_rates_daily")
+    Parameters:
+        None
+    Returns:
+        str: parsed JSON 
+
+    """
+
+    try:
+
+        rates_df = pd.DataFrame()
+
+        rates_apis ={
+            "HomePageRates":"https://custom.resbank.co.za/SarbWebApi/WebIndicators/HomePageRates"
+            , "CurrentMarketRates": "https://custom.resbank.co.za/SarbWebApi/WebIndicators/CurrentMarketRates"
+            # , "DailyExcahngeRates": "https://custom.resbank.co.za/SarbWebApi/WebIndicators/HistoricalExchangeRatesDaily"
+            }
+
+        for rate, api_url in rates_apis.items():
+          
+            # 1. fetch the data from the API -> JSON String (parsed)
+            api_data_str = fetch_data(api_url)
+
+            # 2. convert the string into a pandas dataframe 
+            api_data_df = convert_data_to_dataframe(api_data_str)
+
+            # 3. Append the API data to the existing rates dataframe. 
+            rates_df = pd.concat([rates_df, api_data_df], ignore_index=True)
+            
+        return rates_df
+
+    except Exception as err:
+        raise err
+ 
