@@ -1,6 +1,5 @@
 import requests 
 import pandas as pd
-from . import utils
 
 def fetch_data(api_url: str) -> str:
     """ 
