@@ -38,7 +38,7 @@ def main():
             )
 
         # setup sidebar
-        st.sidebar.header("SARB Market and Exhange Rates")
+        st.sidebar.header("Menu")
         st.sidebar.caption("https://custom.resbank.co.za/SarbWebApi/Help")
         if st.sidebar.button("Refresh API Data"):
             st.rerun()  # This reloads the page
@@ -56,6 +56,7 @@ def main():
         exchange_rates_df = df[df["SectionName"] == "Exchange rates"][["Name", "Value", "Date", "UpDown"]]
         money_market_rates_df = df[df["SectionName"] == "Money Market Rates"][["Name", "Value", "Date", "UpDown"]]
 
+        st.header("SARB Market and Exhange Rates")
         st.caption("Trends", help="Movement: ▲ for up, ▼ for down, = for no change")
 
         # first container, with Interest, Inflation and Capital Market Rates
