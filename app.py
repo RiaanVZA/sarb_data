@@ -32,7 +32,7 @@ def main():
 
         # setup landing page
         st.set_page_config(
-            page_title="SARB Market and Exchange Rates"
+            page_title="SARB Market & Exchange Rates"
             , page_icon=":chart_with_upwards_trend:"
             , layout="wide"
             )
