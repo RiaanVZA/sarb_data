@@ -33,7 +33,7 @@ def main():
         , page_icon=":shark:"
         , layout="wide"
         )
-    st.sidebar.image("./images/sahl-sqr.png", width=100)
+    # st.sidebar.image("./images/logo.jpg", width=100)
     st.sidebar.header("SARB Market and Exhange Rates")
   
     #popluate data
