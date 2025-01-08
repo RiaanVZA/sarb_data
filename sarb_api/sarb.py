@@ -1,33 +1,9 @@
 import requests 
 import pandas as pd
 import streamlit as st
-from typing import  Any, List, Dict, Union 
+
 from pathlib import Path
 from . import utils
-
-
-
-# def display_data(df):
-#     """ Display the contets of a dataframe.
-#     """
-       
-#     try:
-
-#         # create a sub section (view)
-#         df_sorted = df.sort_values(by=["Date", "SectionName", "SectionId", "Name"], ascending=[True, True, True, True])
-#         df_distinct = df_sorted.drop_duplicates(subset=["Name"])
-#         df_view = df_distinct[["SectionName", "SectionId", "Name", "Value", "Date"]]
-        
-
-#         #print the contents of the dataframe in a table
-#         colalign = ["left", "left", "left", "left", "right", "center"]
-#         print(tabulate(df_view, headers='keys', tablefmt='presto', colalign=colalign))
-
-
-#     except Exception as err:
-#         raise err 
-
-
 
 def fetch_data(api_url: str) -> str:
     """ 
