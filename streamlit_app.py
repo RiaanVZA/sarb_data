@@ -64,7 +64,7 @@ try:
 
         # st.title('Select Data Element')
         unique_options = df["Name"].unique().tolist()
-        selected_name = st.selectbox("Select Data Element", options=unique_options, index=5)
+        selected_name = st.selectbox("Select Data Element", options=unique_options, index=9)
 
         selected_category = df.loc[df["Name"] == selected_name, "SectionName"].squeeze()
         selected_tscode = df.loc[df["Name"] == selected_name, "TimeseriesCode"].squeeze()
