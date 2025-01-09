@@ -1,15 +1,9 @@
 import requests 
 import pandas as pd
 
-def fetch_data(api_url: str) -> str:
+def GET_data(api_url: str) -> str:
     """ 
     Fetch data from any given SARB API.
-
-    Parameters: 
-    - api_url = API URL 
-
-    Returns:
-       str : JSON response form API.
     """
 
     try:
@@ -23,7 +17,27 @@ def fetch_data(api_url: str) -> str:
             print("{'Status_Code': '%s!'}" % response.status_code)
 
     except Exception as err:
+        print("Something went wrong!")
+
+def GET_timeseries_data(tscode: str) -> str:
+    """ 
+    Fetch graph data from SARS based on a specific timeseries code.
+    """
+
+    try:
+
+        request_str = f"https://custom.resbank.co.za/SarbWebApi/WebIndicators/Shared/GetTimeseriesObservations/{tscode}"
+        response = requests.get(request_str)
+
+        if response.status_code == 200:
+            parsed_json = response.json() 
+            return parsed_json           
+        else:
+            print("{'Status_Code': '%s!'}" % response.status_code)
+
+    except Exception as err:
         print("Something went wrong!")   
+
 
 def convert_data_to_dataframe(data) -> pd.DataFrame:
     """ convert JSON data received from API to dataframe
@@ -44,16 +58,9 @@ def convert_data_to_dataframe(data) -> pd.DataFrame:
     except Exception as err:
         print("Something went wrong!")   
 
-
 def fetch_all_rates() -> str:
     """
     Fetch all the rates from SARB API
-
-    Parameters:
-        None
-    Returns:
-        str: parsed JSON 
-
     """
 
     try:
@@ -69,15 +76,37 @@ def fetch_all_rates() -> str:
         for rate, api_url in rates_apis.items():
           
             # 1. fetch the data from the API -> JSON String (parsed)
-            api_data_str = fetch_data(api_url)
+            api_data_str = GET_data(api_url)
 
             # 2. convert the string into a pandas dataframe 
-            api_data_df = convert_data_to_dataframe(api_data_str)
+            api_data_df = pd.DataFrame(api_data_str)
 
             # 3. Append the API data to the existing rates dataframe. 
             rates_df = pd.concat([rates_df, api_data_df], ignore_index=True)
 
         return rates_df
+
+    except Exception as err:
+        raise err
+ 
+
+def fetch_timeseries_data(tscode: str) -> str:
+    """
+    Fetch timeseries data from SARB API based on tscode
+    """
+
+    try:
+
+        ts_df = pd.DataFrame()    
+          
+        # 1. fetch the data from the API -> JSON String (parsed)
+        api_timeseries_data_str = GET_timeseries_data(tscode)
+       
+        # 2. convert the string into a pandas dataframe 
+        ts_df = pd.DataFrame(api_timeseries_data_str)
+        print(ts_df)
+
+        return ts_df
 
     except Exception as err:
         raise err
