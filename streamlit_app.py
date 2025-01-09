@@ -105,7 +105,7 @@ try:
                     name :str = row["Name"]
                     st.markdown(f"""
                         <li font-size:18px;">{name}: <strong>{row['Value']}%</strong>{map_updown(row['UpDown'])}</li>
-                    """, unsafe_allow_html=True, help=row['TimeseriesCode'])
+                    """, unsafe_allow_html=True)
                     
             with col2:
                 st.subheader("Inflation Rates", divider="blue")
@@ -113,7 +113,7 @@ try:
                     name :str = row["Name"]
                     st.markdown(f"""
                         <li font-size:18px;">{name}: <strong>{row['Value']}%</strong>{map_updown(row['UpDown'])}</li>
-                    """, unsafe_allow_html=True, help=row['TimeseriesCode'])
+                    """, unsafe_allow_html=True)
 
             with col3:
                 st.subheader("Capital Market Rates", divider="violet")
@@ -121,7 +121,7 @@ try:
                     name :str = row["Name"]
                     st.markdown(f"""
                         <li font-size:18px;">{name}: <strong>{row['Value']}%</strong>{map_updown(row['UpDown'])}</li>
-                    """, unsafe_allow_html=True, help=row['TimeseriesCode'])
+                    """, unsafe_allow_html=True)
 
         # second container with Money Market and Exchange Rates
         with st.container():
@@ -133,7 +133,7 @@ try:
                     name :str = row["Name"]
                     st.markdown(f"""
                         <li font-size:18px;">{name}: <strong>{row['Value']}%</strong>{map_updown(row['UpDown'])}</li>
-                    """, unsafe_allow_html=True, help=row['TimeseriesCode'])
+                    """, unsafe_allow_html=True)
                 
             with col2:
                 st.subheader("Exchange Rates", divider="orange")
@@ -142,7 +142,7 @@ try:
                     name :str = row["Name"]
                     st.markdown(f"""
                         <li font-size:18px;">{name}: <strong>R {row['Value']}</strong>{map_updown(row['UpDown'])}</li>
-                    """, unsafe_allow_html=True, help=row['TimeseriesCode'])
+                    """, unsafe_allow_html=True)
 
         # last container with raw data in table/dataframe
         with st.container():
