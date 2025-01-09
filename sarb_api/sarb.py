@@ -104,8 +104,7 @@ def fetch_timeseries_data(tscode: str) -> str:
        
         # 2. convert the string into a pandas dataframe 
         ts_df = pd.DataFrame(api_timeseries_data_str)
-        print(ts_df)
-
+        
         return ts_df
 
     except Exception as err:

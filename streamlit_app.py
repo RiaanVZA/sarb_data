@@ -75,7 +75,6 @@ try:
 
         selected_description = ts_df.loc[ts_df["Timeseries"] == selected_name, "Description"].unique().squeeze()
 
-        
         st.header(f"{selected_category} - {selected_name}")
         st.caption(selected_description)
         
