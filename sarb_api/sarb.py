@@ -19,16 +19,18 @@ def GET_data(api_url: str) -> str:
     except Exception as err:
         print("Something went wrong!")
 
-def GET_timeseries_data(tscode: str) -> str:
+def GET_timeseries_data(tscode: str, start_date: str, end_date: str) -> str:
     """ 
     Fetch graph data from SARS based on a specific timeseries code.
     """
 
     try:
 
-        request_str = f"https://custom.resbank.co.za/SarbWebApi/WebIndicators/Shared/GetTimeseriesObservations/{tscode}"
+        request_str = f"https://custom.resbank.co.za/SarbWebApi/WebIndicators/Shared/GetTimeseriesObservations/{tscode}/{start_date}/{end_date}"
+        print("Calling GET", request_str)
         response = requests.get(request_str)
-
+        print("Response:", response.status_code)
+        
         if response.status_code == 200:
             parsed_json = response.json() 
             return parsed_json           
@@ -90,7 +92,7 @@ def fetch_all_rates() -> str:
         raise err
  
 
-def fetch_timeseries_data(tscode: str) -> str:
+def fetch_timeseries_data(tscode: str, start_date: str, end_date: str) -> str:
     """
     Fetch timeseries data from SARB API based on tscode
     """
@@ -100,11 +102,11 @@ def fetch_timeseries_data(tscode: str) -> str:
         ts_df = pd.DataFrame()    
           
         # 1. fetch the data from the API -> JSON String (parsed)
-        api_timeseries_data_str = GET_timeseries_data(tscode)
+        api_timeseries_data_str = GET_timeseries_data(tscode, start_date, end_date)
        
         # 2. convert the string into a pandas dataframe 
         ts_df = pd.DataFrame(api_timeseries_data_str)
-        
+
         return ts_df
 
     except Exception as err:
