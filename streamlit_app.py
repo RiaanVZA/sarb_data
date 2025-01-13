@@ -82,7 +82,7 @@ try:
                 Movement: ▲ for up, ▼ for down, = for no change
                 </td>
                 <td align="right" style="border:none;">
-                Like what you see? Please consider supporting my by buying me a coffee.  
+                Like what you see? Please consider supporting me. Thank you.   
                     <a href="https://buymeacoffee.com/riaanv" target="_blank" style="text-decoration: none;">
                     <button style="background-color:#FFDD00; border:none; border-radius:5px; color:black; padding:5px 5px; font-size:12px;">
                         ☕ Buy Me a Coffee
