@@ -72,7 +72,28 @@ try:
         money_market_rates_df = df[df["SectionName"] == "Money Market Rates"][["Name", "Value", "Date", "UpDown","TimeseriesCode"]]
 
     
-        st.caption("Trends", help="Movement: ▲ for up, ▼ for down, = for no change")
+        # st.caption("Trends", help="Movement: ▲ for up, ▼ for down, = for no change")
+
+        st.markdown(
+        """
+        <table width="100%" cellspacing="0" cellpadding="0" style="border:none; font-size:12px;">
+            <tr style="border:none;">
+                <td style="border:none;">
+                Movement: ▲ for up, ▼ for down, = for no change
+                </td>
+                <td align="right" style="border:none;">
+                Like what you see? Please consider supporting my by buying me a coffee.  
+                    <a href="https://buymeacoffee.com/riaanv" target="_blank" style="text-decoration: none;">
+                    <button style="background-color:#FFDD00; border:none; border-radius:5px; color:black; padding:5px 5px; font-size:12px;">
+                        ☕ Buy Me a Coffee
+                    </button>
+                </a>
+                </td>
+            </tr>
+        </table>
+        """,
+        unsafe_allow_html=True
+    )
 
         # first container, with Interest, Inflation and Capital Market Rates
         with st.container():
